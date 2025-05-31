@@ -108,7 +108,7 @@ function goToPath(item: ItemType) {
 
     <!-- 头部 -->
     <a-layout>
-      <a-layout-header style="height: --header-height !important; background: #fff; padding: 0">
+      <a-layout-header style="background: #fff; padding: 0">
         <a-page-header style="width: 100%; padding: 14.5px 24px">
           <template #extra>
             <a-space :size="16" wrap>
