@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { SearchOutlined } from '@ant-design/icons-vue'
-import type { TableColumnType, TableProps } from 'ant-design-vue'
+import type { TableColumnType } from 'ant-design-vue'
 type TableDataType = {
   key: string
   name: string
@@ -18,13 +18,13 @@ const state = reactive({
   searchedColumn: '',
 })
 
-const handleSearch = (selectedKeys: string[], confirm: Function, dataIndex: string) => {
+const handleSearch = (selectedKeys: string[], confirm: () => void, dataIndex: string) => {
   confirm()
   state.searchText = selectedKeys[0]
   state.searchedColumn = dataIndex
 }
 
-const handleReset = (clearFilters: Function) => {
+const handleReset = (clearFilters: (options?: { confirm: boolean }) => void) => {
   clearFilters({ confirm: true })
   state.searchText = ''
 }

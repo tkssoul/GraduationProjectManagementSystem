@@ -2,7 +2,7 @@
 import { RouterView, useRouter } from 'vue-router'
 import { ref, h, reactive } from 'vue'
 import { useSiderStore } from '@/stores/sider'
-import type { MenuTheme, ItemType, MenuProps } from 'ant-design-vue'
+import type { MenuTheme, ItemType } from 'ant-design-vue'
 const theme = ref<MenuTheme>('light')
 import {
   AuditOutlined,
