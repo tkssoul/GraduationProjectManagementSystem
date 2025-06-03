@@ -7,8 +7,10 @@
 **前端技术栈:** Vue 3, Ant Design Vue, Vite, Vue Router, Pinia, TypeScript
 
 ## 原型图演示
-
 https://pixso.cn/app/editor/jwBDRWLfpsz_Xr4XUALVJw?page-id=0%3A1
+
+## 自定义配置
+详细配置请参阅 [Vite 配置参考](https://vite.dev/config/)。
 
 ## 项目设置与运行
 
@@ -43,5 +45,8 @@ pnpm lint
 ```
 
 ## 团队协作约定
-
-1.Git提交应遵守提交信息规范<br/> 2.禁止直接覆盖主分支<br/> 3.使用Prettier进行代码格式化，ESLint进行代码规范检查<br/> 4.使用TypeScript等类型检查语言，每一个变量都应声明类型<br/> 5.标签使用kebab-case格式，变量使用驼峰式<br/>
+1.Git提交应遵守提交信息规范
+2.禁止直接覆盖主分支
+3.使用Prettier进行代码格式化，ESLint进行代码规范检查
+4.使用TypeScript等类型检查语言，每一个变量都应声明类型
+5.标签使用kebab-case格式，变量使用驼峰式

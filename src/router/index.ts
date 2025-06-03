@@ -5,37 +5,16 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('../views/HomeView.vue'),
-      children: [
-        {
-          path: 'grade-management',
-          name: 'gradeManagement',
-          component: () => import('../views/GradeManagement.vue'),
-        },
-      ],
+      name: 'projectProposalSubmission',
+      component: () => import('../views/ProjectProposalSubmission.vue'),
     },
     {
-      path: '/login',
-      name: 'login',
-      component: () => import('../views/auth/LoginView.vue'),
-      children: [
-        {
-          path: 'input-password',
-          name: 'inputPassword',
-          component: () => import('../views/auth/InputPassword.vue'),
-        },
-        {
-          path: 'reset-validate',
-          name: 'resetValidate',
-          component: () => import('../views/auth/ResetValidate.vue'),
-        },
-        {
-          path: 'reset-password',
-          name: 'resetPassword',
-          component: () => import('../views/auth/ResetPassword.vue'),
-        },
-      ],
+      path: '/grade-management',
+      name: 'gradeManagement',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/GradeManagement.vue'),
     },
   ],
 })

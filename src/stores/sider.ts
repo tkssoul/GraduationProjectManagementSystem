@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useSiderStore = defineStore(
@@ -13,7 +13,7 @@ export const useSiderStore = defineStore(
       openKeys.value = newOpenKeys
     }
 
-    return { selectedKeys, openKeys, changeKey, changeOpenKeys }
+    return { selectedKeys , openKeys, changeKey, changeOpenKeys }
   },
   {
     persist: true,
