@@ -2,7 +2,7 @@
 import { RouterView, useRouter } from 'vue-router'
 import { ref, h, reactive } from 'vue'
 import { useSiderStore } from '@/stores/sider'
-import type { MenuTheme, ItemType, MenuProps } from 'ant-design-vue'
+import type { MenuTheme, ItemType } from 'ant-design-vue'
 const theme = ref<MenuTheme>('light')
 import {
   AuditOutlined,
@@ -108,7 +108,7 @@ function goToPath(item: ItemType) {
 
     <!-- 头部 -->
     <a-layout>
-      <a-layout-header style="height: --header-height !important; background: #fff; padding: 0">
+      <a-layout-header style="background: #fff; padding: 0">
         <a-page-header style="width: 100%; padding: 14.5px 24px">
           <template #extra>
             <a-space :size="16" wrap>
