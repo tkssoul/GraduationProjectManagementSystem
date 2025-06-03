@@ -7,6 +7,7 @@ import viteCompression from 'vite-plugin-compression'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/GraduationProjectManagementSystem/', // 设置基础路径，适用于 GitHub Pages
   plugins: [
     vue(),
     vueDevTools(),
