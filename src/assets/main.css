@@ -30,3 +30,7 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+:root {
+  --header-height: 72px;
+}

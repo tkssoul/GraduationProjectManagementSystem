@@ -24,7 +24,7 @@ const handleSearch = (selectedKeys: string[], confirm: () => void, dataIndex: st
   state.searchedColumn = dataIndex
 }
 
-const handleReset = (clearFilters: (options?: { confirm: boolean }) => void) => {
+const handleReset = (clearFilters: (option?: { confirm: boolean }) => void) => {
   clearFilters({ confirm: true })
   state.searchText = ''
 }
