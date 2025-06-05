@@ -1,1 +1,0 @@
-import{d as o}from"./pinia-DSM-4MLd.js";import{h as r}from"./vendor-ChWzW76f.js";const t=o("jwt",(()=>{const o=r("");return{token:o,refreshToken:function(r){o.value=r}}}),{persist:{storage:localStorage}});export{t as u};

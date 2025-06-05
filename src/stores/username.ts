@@ -1,11 +1,11 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useUsernameStore = defineStore('username', () => {
-  const username = ref<string>('')
+export const useIdStore = defineStore('Id', () => {
+  const Id = ref()
 
-  function setUsername(newUsername: string) {
-    username.value = newUsername
+  function setUsername(newId?: number) {
+    Id.value = newId
   }
-  return { username, setUsername }
+  return { Id, setUsername }
 })

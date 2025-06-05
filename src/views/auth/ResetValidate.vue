@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import { reactive, computed, onBeforeMount } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
-import { useUsernameStore } from '@/stores/username'
+import { useIdStore } from '@/stores/username'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const usernameStore = useUsernameStore()
+const usernameStore = useIdStore()
 
 interface FormState {
-  username: string
+  username?: number
 }
 
 const formState = reactive<FormState>({
-  username: '',
+  username: undefined,
 })
 
 onBeforeMount(() => {
-  formState.username = usernameStore.username
+  formState.username = usernameStore.Id
 })
 
 const disabled = computed(() => {

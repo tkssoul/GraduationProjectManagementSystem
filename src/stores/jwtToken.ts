@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useJWTStore = defineStore(
-  'jwt',
+  'token',
   () => {
     const token = ref('')
 
@@ -13,8 +13,6 @@ export const useJWTStore = defineStore(
     return { token, refreshToken }
   },
   {
-    persist: {
-      storage: localStorage, // token存储到localStorage
-    },
+    persist: true,
   },
 )

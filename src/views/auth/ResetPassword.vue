@@ -1,46 +1,98 @@
 <script setup lang="ts">
-import { reactive, computed, onBeforeMount } from 'vue'
-import { useUsernameStore } from '@/stores/username'
+import { ref, reactive, computed, onBeforeMount } from 'vue'
+import { useIdStore } from '@/stores/username'
 import { LockOutlined } from '@ant-design/icons-vue'
+import { useRouter } from 'vue-router'
+import { resetPassword } from '@/api/user'
+import type { ResetPasswordParams } from '@/api/user'
+import type { Rule } from 'ant-design-vue/es/form'
+import type { FormInstance } from 'ant-design-vue'
 
-const usernameStore = useUsernameStore()
+const router = useRouter()
+
+const usernameStore = useIdStore()
 
 interface FormState {
-  username: string
+  id?: number
   password1: string
   password2: string
 }
 const formState = reactive<FormState>({
-  username: '',
+  id: undefined,
   password1: '',
   password2: '',
 })
 
-onBeforeMount(() => {
-  if (usernameStore.username) {
-    formState.username = usernameStore.username
+const formRef = ref<FormInstance>()
+
+const validatePass = async (_rule: Rule, value: string) => {
+  if (value === '') {
+    return Promise.reject('请输入密码！')
   } else {
-    // 如果没有用户名，重定向到输入用户名的页面
-    usernameStore.setUsername('')
-    window.location.href = '/login/reset-validate'
+    if (formState.password2 !== '') {
+      formRef.value?.validateFields('password2')
+    }
+    return Promise.resolve()
+  }
+}
+
+const validatePass2 = async (_rule: Rule, value: string) => {
+  if (value === '') {
+    return Promise.reject('请再次输入密码！')
+  } else if (value !== formState.password1) {
+    return Promise.reject('两次输入的密码不一致！')
+  } else {
+    return Promise.resolve()
+  }
+}
+
+const rules: Record<string, Rule[]> = {
+  password1: [
+    {
+      required: true,
+      validator: validatePass,
+      trigger: 'change',
+    },
+  ],
+  password2: [
+    {
+      required: true,
+      validator: validatePass2,
+      trigger: 'change',
+    },
+  ],
+}
+
+onBeforeMount(() => {
+  if (usernameStore.Id) {
+    formState.id = usernameStore.Id
+  } else {
+    usernameStore.setUsername(undefined)
+    router.replace({ name: 'resetValidate' })
   }
 })
 
 const disabled = computed(() => {
-  return !(formState.username && formState.password1 && formState.password2)
+  return !(formState.id && formState.password1 && formState.password2)
 })
+
+async function handleSubmit() {
+  const data: ResetPasswordParams = {
+    id: formState.id,
+    newPassword: formState.password1,
+    newPasswordAgain: formState.password2,
+  }
+  const res = await resetPassword(data)
+  console.log(`重置密码 response = ${JSON.stringify(res)}`)
+}
 </script>
 
 <template>
   <div ref="signFormRef" class="reset-container form-container half-width">
     <a-flex justify="center" align="center" :vertical="true" style="height: 100%">
       <a-typography-title :level="2">登录</a-typography-title>
-      <a-form :model="formState" name="normal_login" class="login-form">
-        <a-form-item
-          label="输入新密码"
-          name="password1"
-          :rules="[{ required: true, message: '请输入账户！' }]"
-        >
+      <a-form ref="formRef" :model="formState" :rules="rules" @finish="handleSubmit">
+        <a-form-item has-feedback label="输入新密码" name="password1">
           <a-input-password v-model:value="formState.password1">
             <template #prefix>
               <LockOutlined class="site-form-item-icon" />
@@ -48,11 +100,7 @@ const disabled = computed(() => {
           </a-input-password>
         </a-form-item>
 
-        <a-form-item
-          label="请确认密码"
-          name="password2"
-          :rules="[{ required: true, message: '请输入密码！' }]"
-        >
+        <a-form-item has-feedback label="请确认密码" name="password2">
           <a-input-password v-model:value="formState.password2">
             <template #prefix>
               <LockOutlined class="site-form-item-icon" />
@@ -61,13 +109,7 @@ const disabled = computed(() => {
         </a-form-item>
 
         <a-form-item>
-          <a-button
-            :disabled="disabled"
-            type="primary"
-            html-type="submit"
-            class="login-form-button"
-            style="width: 100%"
-          >
+          <a-button :disabled="disabled" type="primary" html-type="submit" style="width: 100%">
             重置密码
           </a-button>
         </a-form-item>

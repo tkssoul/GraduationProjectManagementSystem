@@ -7,7 +7,17 @@ import viteCompression from 'vite-plugin-compression'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/GraduationProjectManagementSystem/', // 设置基础路径，适用于 GitHub Pages
+  // base: '/GraduationProjectManagementSystem/', // 设置基础路径，适用于 GitHub Pages
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://114.55.146.90:8080',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure: false,
+      },
+    },
+  },
   plugins: [
     vue(),
     vueDevTools(),

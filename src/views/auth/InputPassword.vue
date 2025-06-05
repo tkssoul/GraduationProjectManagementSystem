@@ -1,36 +1,85 @@
 <script setup lang="ts">
 import { reactive, computed, onBeforeMount } from 'vue'
-import { useUsernameStore } from '@/stores/username'
+import { useRouter } from 'vue-router'
+import { useIdStore } from '@/stores/username'
 import { useJWTStore } from '@/stores/jwtToken'
+import { useUserStore } from '@/stores/user'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
+import { loginStudent, loginTeacher } from '@/api/user'
 
-const usernameStore = useUsernameStore()
+const router = useRouter()
+const usernameStore = useIdStore()
 const jwtStore = useJWTStore()
+const userStore = useUserStore()
+
+interface UserInfoType {
+  id: number
+  name: string
+  role: string
+}
 
 interface FormState {
-  username: string
+  id: number
   password: string
   remember: boolean
+  role: string
 }
+
 const formState = reactive<FormState>({
-  username: '',
+  id: 0,
   password: '',
   remember: true,
+  role: 'student',
 })
 
 onBeforeMount(() => {
-  formState.username = usernameStore.username
+  formState.id = usernameStore.Id
 })
 
 const disabled = computed(() => {
-  return !(formState.username && formState.password)
+  return !(formState.id && formState.password)
 })
 
-function handleSubmit() {
-  if (formState.remember) {
-    jwtStore.refreshToken('这是测试token')
+async function handleSubmit() {
+  console.log(`formState = ${JSON.stringify(formState)}`)
+  if (formState.role == 'teacher') {
+    try {
+      const res = await loginTeacher({ teacherId: formState.id, password: formState.password })
+      console.log(`教师登录 response = ${JSON.stringify(res)}`)
+      if (res.data.authorization != null) {
+        jwtStore.refreshToken(res.data.authorization)
+        const userInfo: UserInfoType = {
+          id: res.data.id,
+          name: res.data.name,
+          role: formState.role,
+        }
+        userStore.setUser(userInfo)
+      }
+
+      await router.replace({ name: 'gradeManagement' })
+    } catch (error) {
+      console.error('教师登录出错:', error)
+    }
+    return
+  } else if (formState.role == 'student') {
+    try {
+      const res = await loginStudent({ studentId: formState.id, password: formState.password })
+      console.log(`学生登录 response = ${JSON.stringify(res)}`)
+      if (res.data.token != null) {
+        jwtStore.refreshToken(res.data.token)
+        const userInfo: UserInfoType = {
+          id: res.data.id,
+          name: res.data.name,
+          role: formState.role,
+        }
+        userStore.setUser(userInfo)
+      }
+      await router.replace({ name: 'gradeManagement' })
+    } catch (error) {
+      console.error('学生登录出错:', error)
+    }
+    return
   }
-  console.log('成功保持登录态，现在的token是:', jwtStore.token)
 }
 </script>
 
@@ -41,11 +90,11 @@ function handleSubmit() {
       <a-form :model="formState" name="normal_login" class="login-form" @finish="handleSubmit">
         <a-form-item
           label="账户"
-          name="username"
-          @change="usernameStore.setUsername(formState.username)"
+          name="id"
+          @change="usernameStore.setUsername(formState.id)"
           :rules="[{ required: true, message: '请输入账户！' }]"
         >
-          <a-input v-model:value="formState.username">
+          <a-input v-model:value="formState.id">
             <template #prefix>
               <UserOutlined class="site-form-item-icon" />
             </template>
@@ -68,6 +117,15 @@ function handleSubmit() {
           <a-form-item name="remember" no-style>
             <a-checkbox v-model:checked="formState.remember">记住我</a-checkbox>
           </a-form-item>
+        </a-form-item>
+
+        <a-form-item name="role">
+          <a-flex justify="center" align="center" :vertical="true">
+            <a-radio-group v-model:value="formState.role">
+              <a-radio-button value="student">学生登录</a-radio-button>
+              <a-radio-button value="teacher">教师登录</a-radio-button>
+            </a-radio-group>
+          </a-flex>
         </a-form-item>
 
         <a-form-item>

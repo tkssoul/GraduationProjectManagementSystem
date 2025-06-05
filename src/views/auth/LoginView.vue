@@ -46,14 +46,10 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useOverlayStore } from '@/stores/overlayPosition'
-import { useJWTStore } from '@/stores/jwtToken'
 
 const overlayStore = useOverlayStore()
-const jwtStore = useJWTStore()
 
 onMounted(() => {
-  console.log('现在测试token是否维持，现在的token是:', jwtStore.token)
-  // 恢复overlay位置
   if (overlayStore.overlayPosition === 'right') {
     overlayRef.value?.classList.add('welcome-right')
   } else {

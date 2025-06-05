@@ -2,8 +2,13 @@
 import { RouterView, useRouter } from 'vue-router'
 import { ref, h, reactive } from 'vue'
 import { useSiderStore } from '@/stores/sider'
+import { useUserStore } from '@/stores/user'
 import type { MenuTheme, ItemType } from 'ant-design-vue'
 const theme = ref<MenuTheme>('light')
+
+const userStore = useUserStore()
+const userInfo = userStore.user
+
 import {
   AuditOutlined,
   AppstoreOutlined,
@@ -114,8 +119,8 @@ function goToPath(item: ItemType) {
             <a-space :size="16" wrap>
               <SettingOutlined class="header-icons" />
               <span class="user-info">
-                <a-avatar src="/src/assets/logo-icon.png" />
-                <span class="username">测试用户</span>
+                <a-avatar src="/src/assets/logo-icon.png" alt="用户头像" />
+                <span class="username">{{ userInfo.name }}</span>
               </span>
               <GlobalOutlined class="header-icons" />
             </a-space>
@@ -125,9 +130,9 @@ function goToPath(item: ItemType) {
 
       <!-- 右边内容部分 -->
       <router-view v-slot="{ Component }">
-        <transition>
+        <Transition>
           <component :is="Component" />
-        </transition>
+        </Transition>
       </router-view>
     </a-layout>
   </a-layout>
