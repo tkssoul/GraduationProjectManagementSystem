@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.foufou.mapper.TeacherMapper">
+
+    <select id="searchGrades" resultType="com.foufou.domain.vo.GradeVO">
+        SELECT
+        g.grade_id AS gradeId,
+        g.student_id AS studentId,
+        s.name AS name,
+        tp.title AS topicTitle,
+        te.name AS supervisor,
+        g.midterm_grade AS midtermGrade,
+        g.thesis_grade AS thesisGrade,
+        g.defense_grade AS defenseGrade,
+        g.final_grade AS finalGrade,
+        g.grade_status AS gradeStatus
+        FROM grades g
+        JOIN students s ON g.student_id = s.student_id
+        JOIN topics tp ON g.topic_id = tp.topic_id
+        JOIN teachers te ON tp.supervisor_id = te.teacher_id
+        <where>
+            <if test="gradeStatus != null and gradeStatus != ''">
+                g.grade_status = #{gradeStatus}
+            </if>
+        </where>
+    </select>
+</mapper>

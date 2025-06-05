@@ -1,0 +1,68 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  datasource:
+    driver-class-name: ${fou.datasource.driver-class-name}
+    url: jdbc:mysql://${fou.datasource.host}:${fou.datasource.port}/${fou.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${fou.datasource.username}
+    password: ${fou.datasource.password}
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+  data:
+    redis:
+      host: ${fou.redis.host}
+      port: ${fou.redis.port}
+      database: ${fou.redis.database}
+      auth: ${fou.redis.password}
+#  ai:
+#    openai:
+#      api-key: sk-TJ2rftsz2pTlkxRmHYPs6YwfdCIcwPY8nwjRPa1iG9EXDL6m
+#      base-url: https://chatapi.littlewheat.com
+#      chat:
+#        options:
+#          model: gpt-4o   # gpt-4o-mini
+#          temperature: 0.7
+
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.foufou.fwwb.domain.entity
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+mybatis-plus:
+  type-aliases-package: com.foufou.fwwb.domain.entity
+  global-config:
+    db-config:
+      id-type: auto # 全局id类型为自增长
+  mapper-locations: "classpath*:/mapper/**/*.xml"
+
+logging:
+  level:
+    com:
+      foufou:
+        fwwb:
+          mapper: debug
+          service: info
+          controller: info
+
+
+fou:
+  jwt:
+    tea-secret-key: your-256-bit-secret-key-here-1234567890
+    tea-ttl: 14400000
+    tea-token-name: Authorization
+    stu-secret-key: your-256-bit-secret-key-here-1234567890
+    stu-ttl: 14400000
+    stu-token-name: token
+
+
