@@ -21,14 +21,12 @@ interface UserInfoType {
 interface FormState {
   id: number
   password: string
-  remember: boolean
   role: string
 }
 
 const formState = reactive<FormState>({
   id: 0,
   password: '',
-  remember: true,
   role: 'student',
 })
 
@@ -40,12 +38,16 @@ const disabled = computed(() => {
   return !(formState.id && formState.password)
 })
 
+function wrongLoginInfo() {
+  id: []
+  password: []
+}
+
 async function handleSubmit() {
   console.log(`formState = ${JSON.stringify(formState)}`)
   if (formState.role == 'teacher') {
     try {
       const res = await loginTeacher({ teacherId: formState.id, password: formState.password })
-      console.log(`教师登录 response = ${JSON.stringify(res)}`)
       if (res.data.authorization != null) {
         jwtStore.refreshToken(res.data.authorization)
         const userInfo: UserInfoType = {
@@ -54,6 +56,7 @@ async function handleSubmit() {
           role: formState.role,
         }
         userStore.setUser(userInfo)
+        usernameStore.clearUsername()
       }
 
       await router.replace({ name: 'gradeManagement' })
@@ -64,7 +67,6 @@ async function handleSubmit() {
   } else if (formState.role == 'student') {
     try {
       const res = await loginStudent({ studentId: formState.id, password: formState.password })
-      console.log(`学生登录 response = ${JSON.stringify(res)}`)
       if (res.data.token != null) {
         jwtStore.refreshToken(res.data.token)
         const userInfo: UserInfoType = {
@@ -111,12 +113,6 @@ async function handleSubmit() {
               <LockOutlined class="site-form-item-icon" />
             </template>
           </a-input-password>
-        </a-form-item>
-
-        <a-form-item>
-          <a-form-item name="remember" no-style>
-            <a-checkbox v-model:checked="formState.remember">记住我</a-checkbox>
-          </a-form-item>
         </a-form-item>
 
         <a-form-item name="role">
