@@ -103,7 +103,6 @@ async function handleSubmit() {
   <div ref="signFormRef" class="reset-container form-container half-width">
     <context-holder />
     <a-flex justify="center" align="center" :vertical="true" style="height: 100%">
-      <a-typography-title :level="2">登录</a-typography-title>
       <a-form ref="formRef" :model="formState" :rules="rules" @finish="handleSubmit">
         <a-form-item has-feedback label="输入新密码" name="password1">
           <a-input-password v-model:value="formState.password1">
