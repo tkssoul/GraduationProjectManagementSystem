@@ -73,6 +73,7 @@ async function handleSubmit() {
       formState.role === 'teacher'
         ? await loginTeacher({ teacherId: formState.id, password: formState.password })
         : await loginStudent({ studentId: formState.id, password: formState.password })
+        console.log(`res = ${JSON.stringify(res)}`)
     if (res.data != null) {
       const token = res.data.token ? res.data.token : res.data.authorization
       jwtStore.refreshToken(token)
@@ -86,7 +87,9 @@ async function handleSubmit() {
       await router.replace({ name: 'gradeManagement' })
     } else {
       requestState.value = 'fail'
-      const toValidate: string = res.msg === '账号不存在' ? 'id' : 'password'
+      // 由于 AxiosResponse 上不存在 msg 属性，假设错误信息在 data 里的 msg 字段
+      const errorMsg = res.data?.msg || '未知错误'
+      const toValidate: string = errorMsg === '账号不存在' ? 'id' : 'password'
       formRef.value?.validate([toValidate])
     }
   } catch (error) {

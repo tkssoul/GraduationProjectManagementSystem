@@ -1,4 +1,10 @@
 import axios from 'axios'
+import type { AxiosResponse } from 'axios'
+
+interface responseType extends AxiosResponse {
+  code: string
+  msg: string
+}
 
 // 创建 axios 实例
 const instance = axios.create({
@@ -26,7 +32,7 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   (response) => {
-    return response.data
+    return response as responseType
   },
   (error) => {
     // 处理响应错误
