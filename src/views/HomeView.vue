@@ -3,10 +3,12 @@ import { RouterView, useRouter } from 'vue-router'
 import { ref, h, reactive } from 'vue'
 import { useSiderStore } from '@/stores/sider'
 import { useUserStore } from '@/stores/user'
+import { useJWTStore } from '@/stores/jwtToken'
 import type { MenuTheme, ItemType } from 'ant-design-vue'
 const theme = ref<MenuTheme>('light')
 
 const userStore = useUserStore()
+const jwtStore = useJWTStore()
 const userInfo = userStore.user
 
 import {
@@ -83,8 +85,14 @@ function goToPath(item: ItemType) {
   if (item != null) {
     const path = pathMap[item.key as string]
     router.push(path)
-    console.log('点击菜单栏', JSON.stringify(item.key))
   }
+}
+
+function logout() {
+  localStorage.removeItem('token')
+  userStore.clearUser()
+  jwtStore.clearToken()
+  router.replace({ name: 'inputPassword' })
 }
 </script>
 
@@ -118,10 +126,18 @@ function goToPath(item: ItemType) {
           <template #extra>
             <a-space :size="16" wrap>
               <SettingOutlined class="header-icons" />
-              <span class="user-info">
-                <a-avatar src="/src/assets/logo-icon.png" alt="用户头像" />
-                <span class="username">{{ userInfo.name }}</span>
-              </span>
+              <a-popover>
+                <template #content>
+                  <a-flex gap="0" justify="center" align="center" :vertical="true">
+                    <span class="popover-content" @click="logout">退出登录</span>
+                  </a-flex>
+                </template>
+                <span class="user-info">
+                  <a-avatar src="@/assets/logo-icon.png" alt="用户头像" />
+                  <span class="username">{{ userInfo.name }}</span>
+                </span>
+              </a-popover>
+
               <GlobalOutlined class="header-icons" />
             </a-space>
           </template>
@@ -177,6 +193,19 @@ function goToPath(item: ItemType) {
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;
+}
+
+.popover-content {
+  text-align: center;
+  padding: 5px;
+  width: 100%;
+}
+
+.popover-content:hover {
+  color: #1777ff;
+  background-color: rgba(23, 119, 255, 0.2); /* #1777ff is rgb(23, 119, 255) */
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 @media (min-width: 1024px) {
