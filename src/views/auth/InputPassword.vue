@@ -23,13 +23,13 @@ interface UserInfoType {
 const formRef = ref<FormInstance>()
 
 interface FormState {
-  id: number
+  id?: number
   password: string
   role: string
 }
 
 const formState = reactive<FormState>({
-  id: 0,
+  id: undefined,
   password: '',
   role: 'student',
 })
@@ -73,7 +73,6 @@ async function handleSubmit() {
       formState.role === 'teacher'
         ? await loginTeacher({ teacherId: formState.id, password: formState.password })
         : await loginStudent({ studentId: formState.id, password: formState.password })
-        console.log(`res = ${JSON.stringify(res)}`)
     if (res.data != null) {
       const token = res.data.token ? res.data.token : res.data.authorization
       jwtStore.refreshToken(token)
@@ -84,12 +83,10 @@ async function handleSubmit() {
       }
       userStore.setUser(userInfo)
       usernameStore.clearUsername()
-      await router.replace({ name: 'gradeManagement' })
+      router.replace({ name: 'gradeManagement' })
     } else {
       requestState.value = 'fail'
-      // 由于 AxiosResponse 上不存在 msg 属性，假设错误信息在 data 里的 msg 字段
-      const errorMsg = res.data?.msg || '未知错误'
-      const toValidate: string = errorMsg === '账号不存在' ? 'id' : 'password'
+      const toValidate: string = res.msg === '账号不存在' ? 'id' : 'password'
       formRef.value?.validate([toValidate])
     }
   } catch (error) {
@@ -145,13 +142,7 @@ async function handleSubmit() {
         </a-form-item>
 
         <a-form-item>
-          <a-button
-            :disabled="disabled"
-            type="primary"
-            html-type="submit"
-            class="login-form-button"
-            style="width: 100%"
-          >
+          <a-button :disabled="disabled" type="primary" html-type="submit" style="width: 100%">
             登录
           </a-button>
         </a-form-item>

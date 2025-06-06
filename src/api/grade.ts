@@ -9,14 +9,13 @@ import request from '@/utils/request'
  * @param {string} Authorization - 用于身份验证的授权令牌
  * @returns {Promise<any>} 返回一个 Promise，该 Promise 解析为请求的响应数据
  */
-export function getGradeList(gradeStatus: string, Authorization: string) {
+export function getGradeList(gradeStatus: string) {
   return request({
     url: '/api/teacher/grades/pending',
     method: 'get',
     params: { gradeStatus: gradeStatus },
-    headers: {
-      Authorization: Authorization,
-    },
+  }).then((res) => {
+    return res.data
   })
 }
 
@@ -26,7 +25,7 @@ export function getGradeList(gradeStatus: string, Authorization: string) {
  * @property {number} gradeId - 成绩 ID
  * @property {string} gradeStatus - 成绩状态
  */
-interface Grade {
+export interface Grade {
   gradeId: number
   gradeStatus: string
 }
@@ -37,14 +36,13 @@ interface Grade {
  * @param {string} Authorization - 用于身份验证的授权令牌
  * @returns {Promise<any>} 返回一个 Promise，该 Promise 解析为请求的响应数据
  */
-export function reviewGrade(data: Grade, Authorization: string) {
+export function reviewGrade(data: Grade[]) {
   return request({
     url: '/api/teacher/grades/audit',
     method: 'put',
     data,
-    headers: {
-      Authorization: Authorization,
-    },
+  }).then((res) => {
+    return res.data
   })
 }
 
@@ -56,11 +54,12 @@ export function reviewGrade(data: Grade, Authorization: string) {
  */
 export function getStudentGrade(id: string, token: string) {
   return request({
-    url: '/api/student/grades/published',
+    url: `/api/student/grades/published/${id}`,
     method: 'get',
-    params: { id: id },
     headers: {
       token: token,
     },
+  }).then((res) => {
+    return res.data
   })
 }

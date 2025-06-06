@@ -1,10 +1,4 @@
 import axios from 'axios'
-import type { AxiosResponse } from 'axios'
-
-interface responseType extends AxiosResponse {
-  code: string
-  msg: string
-}
 
 // 创建 axios 实例
 const instance = axios.create({
@@ -16,9 +10,13 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`
+    interface TokenStore {
+      token?: string
+    }
+    const tokenStr = localStorage.getItem('token')
+    const tokenObj: TokenStore = tokenStr ? JSON.parse(tokenStr) : null
+    if (tokenObj) {
+      config.headers['Authorization'] = tokenObj.token
     }
     return config
   },
@@ -32,7 +30,7 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   (response) => {
-    return response as responseType
+    return response
   },
   (error) => {
     // 处理响应错误

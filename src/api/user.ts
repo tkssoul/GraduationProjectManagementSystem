@@ -49,6 +49,8 @@ export function loginStudent(data: loginParams) {
     url: '/api/student/login',
     method: 'post',
     data,
+  }).then((response) => {
+    return response.data
   })
 }
 
@@ -64,6 +66,8 @@ export function logoutStudent(token: string) {
     headers: {
       token: token,
     },
+  }).then((response) => {
+    return response.data
   })
 }
 
@@ -77,6 +81,8 @@ export function loginTeacher(data: loginParams) {
     url: '/api/teacher/login',
     method: 'post',
     data,
+  }).then((response) => {
+    return response.data
   })
 }
 
@@ -92,5 +98,7 @@ export function logoutTeacher(Authorization: string) {
     headers: {
       Authorization: Authorization,
     },
+  }).then((response) => {
+    return response.data
   })
 }
