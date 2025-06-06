@@ -7,5 +7,10 @@ export const useIdStore = defineStore('Id', () => {
   function setUsername(newId?: number) {
     Id.value = newId
   }
-  return { Id, setUsername }
+
+  function clearUsername() {
+    Id.value = undefined
+  }
+
+  return { Id, setUsername, clearUsername }
 })

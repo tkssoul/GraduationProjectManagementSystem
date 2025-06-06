@@ -4,22 +4,30 @@ import { ref } from 'vue'
 interface User {
   name: string
   role: string
-  id: number
+  id?: number
 }
 export const useUserStore = defineStore(
   'user',
   () => {
-    const user = ref({
+    const user = ref<User>({
       name: '',
       role: '',
-      id: 0,
+      id: undefined,
     })
 
     function setUser(newUser: User) {
       user.value = newUser
     }
 
-    return { user, setUser }
+    function clearUser() {
+      user.value = {
+        name: '',
+        role: '',
+        id: undefined,
+      }
+    }
+
+    return { user, setUser, clearUser }
   },
   { persist: true },
 )

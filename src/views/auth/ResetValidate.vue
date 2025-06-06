@@ -61,7 +61,8 @@ const disabled = computed(() => {
 <style scoped>
 .validate-container {
   padding: 20px;
-  transform: translateX(-100%);
   height: 100%;
+  position: relative;
+  left: -50%;
 }
 </style>

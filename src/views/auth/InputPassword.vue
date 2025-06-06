@@ -1,22 +1,26 @@
 <script setup lang="ts">
-import { reactive, computed, onBeforeMount } from 'vue'
+import { reactive, computed, onBeforeMount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useIdStore } from '@/stores/username'
 import { useJWTStore } from '@/stores/jwtToken'
 import { useUserStore } from '@/stores/user'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { loginStudent, loginTeacher } from '@/api/user'
+import type { Rule, FormInstance } from 'ant-design-vue/es/form'
 
 const router = useRouter()
 const usernameStore = useIdStore()
 const jwtStore = useJWTStore()
 const userStore = useUserStore()
+const requestState = ref<string>('idle')
 
 interface UserInfoType {
   id: number
   name: string
   role: string
 }
+
+const formRef = ref<FormInstance>()
 
 interface FormState {
   id: number
@@ -38,50 +42,57 @@ const disabled = computed(() => {
   return !(formState.id && formState.password)
 })
 
-function wrongLoginInfo() {
-  id: []
-  password: []
+const rules: Record<string, Rule[]> = {
+  id: [{ validator: validateID, trigger: 'blur' }],
+  password: [{ validator: validatePassword, trigger: 'blur' }],
+}
+
+async function validateID(_rule: Rule, value: string) {
+  if (value === '') {
+    return Promise.reject(new Error('请输入账号！'))
+  } else if (value !== '' && requestState.value === 'fail') {
+    return Promise.reject(new Error('账号不存在！'))
+  } else {
+    return Promise.resolve()
+  }
+}
+
+async function validatePassword(_rule: Rule, value: string) {
+  if (value === '') {
+    return Promise.reject(new Error('请输入密码！'))
+  } else if (value !== '' && requestState.value === 'fail') {
+    return Promise.reject(new Error('密码错误！'))
+  } else {
+    return Promise.resolve()
+  }
 }
 
 async function handleSubmit() {
-  console.log(`formState = ${JSON.stringify(formState)}`)
-  if (formState.role == 'teacher') {
-    try {
-      const res = await loginTeacher({ teacherId: formState.id, password: formState.password })
-      if (res.data.authorization != null) {
-        jwtStore.refreshToken(res.data.authorization)
-        const userInfo: UserInfoType = {
-          id: res.data.id,
-          name: res.data.name,
-          role: formState.role,
-        }
-        userStore.setUser(userInfo)
-        usernameStore.clearUsername()
+  try {
+    const res =
+      formState.role === 'teacher'
+        ? await loginTeacher({ teacherId: formState.id, password: formState.password })
+        : await loginStudent({ studentId: formState.id, password: formState.password })
+    if (res.data != null) {
+      const token = res.data.token ? res.data.token : res.data.authorization
+      jwtStore.refreshToken(token)
+      const userInfo: UserInfoType = {
+        id: res.data.id,
+        name: res.data.name,
+        role: formState.role,
       }
-
+      userStore.setUser(userInfo)
+      usernameStore.clearUsername()
       await router.replace({ name: 'gradeManagement' })
-    } catch (error) {
-      console.error('教师登录出错:', error)
+    } else {
+      requestState.value = 'fail'
+      const toValidate: string = res.msg === '账号不存在' ? 'id' : 'password'
+      formRef.value?.validate([toValidate])
     }
-    return
-  } else if (formState.role == 'student') {
-    try {
-      const res = await loginStudent({ studentId: formState.id, password: formState.password })
-      if (res.data.token != null) {
-        jwtStore.refreshToken(res.data.token)
-        const userInfo: UserInfoType = {
-          id: res.data.id,
-          name: res.data.name,
-          role: formState.role,
-        }
-        userStore.setUser(userInfo)
-      }
-      await router.replace({ name: 'gradeManagement' })
-    } catch (error) {
-      console.error('学生登录出错:', error)
-    }
-    return
+  } catch (error) {
+    console.error('登录出错:', error)
   }
+  return
 }
 </script>
 
@@ -89,12 +100,19 @@ async function handleSubmit() {
   <div ref="signFormRef" class="sign-in-container form-container half-width">
     <a-flex justify="center" align="center" :vertical="true" style="height: 100%">
       <a-typography-title :level="2">登录</a-typography-title>
-      <a-form :model="formState" name="normal_login" class="login-form" @finish="handleSubmit">
+      <a-form
+        ref="formRef"
+        :model="formState"
+        :rules="rules"
+        name="normal_login"
+        class="login-form"
+        @finish="handleSubmit"
+      >
         <a-form-item
           label="账户"
           name="id"
-          @change="usernameStore.setUsername(formState.id)"
-          :rules="[{ required: true, message: '请输入账户！' }]"
+          @change="() => usernameStore.setUsername(formState.id)"
+          @blur="() => (requestState = 'idle')"
         >
           <a-input v-model:value="formState.id">
             <template #prefix>
@@ -103,12 +121,11 @@ async function handleSubmit() {
           </a-input>
         </a-form-item>
 
-        <a-form-item
-          label="密码"
-          name="password"
-          :rules="[{ required: true, message: '请输入密码！' }]"
-        >
-          <a-input-password v-model:value="formState.password">
+        <a-form-item label="密码" name="password">
+          <a-input-password
+            v-model:value="formState.password"
+            @blur="() => (requestState = 'idle')"
+          >
             <template #prefix>
               <LockOutlined class="site-form-item-icon" />
             </template>
@@ -143,8 +160,8 @@ async function handleSubmit() {
 <style scoped>
 .sign-in-container {
   padding: 20px;
-  position: relative;
-  right: 0;
   height: 100%;
+  position: relative;
+  left: 0;
 }
 </style>

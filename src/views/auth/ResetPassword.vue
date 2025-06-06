@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onBeforeMount } from 'vue'
 import { useIdStore } from '@/stores/username'
+import { useOverlayStore } from '@/stores/overlayPosition'
 import { LockOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import { resetPassword } from '@/api/user'
 import type { ResetPasswordParams } from '@/api/user'
 import type { Rule } from 'ant-design-vue/es/form'
 import type { FormInstance } from 'ant-design-vue'
+import { message } from 'ant-design-vue'
+const [messageApi, contextHolder] = message.useMessage()
 
 const router = useRouter()
 
 const usernameStore = useIdStore()
+const overlayStore = useOverlayStore()
 
 interface FormState {
   id?: number
@@ -82,13 +86,22 @@ async function handleSubmit() {
     newPassword: formState.password1,
     newPasswordAgain: formState.password2,
   }
-  const res = await resetPassword(data)
-  console.log(`重置密码 response = ${JSON.stringify(res)}`)
+  try {
+    await resetPassword(data)
+    messageApi.info('密码重置成功，即将跳转登录页...')
+    setTimeout(() => {
+      overlayStore.resetPosition()
+      router.replace({ name: 'inputPassword' })
+    }, 2000)
+  } catch (error) {
+    console.error('密码重置失败:', error)
+  }
 }
 </script>
 
 <template>
   <div ref="signFormRef" class="reset-container form-container half-width">
+    <context-holder />
     <a-flex justify="center" align="center" :vertical="true" style="height: 100%">
       <a-typography-title :level="2">登录</a-typography-title>
       <a-form ref="formRef" :model="formState" :rules="rules" @finish="handleSubmit">

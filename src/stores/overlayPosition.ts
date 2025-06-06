@@ -9,7 +9,11 @@ export const useOverlayStore = defineStore(
       overlayPosition.value = newPosition
     }
 
-    return { overlayPosition, changePosition }
+    function resetPosition() {
+      overlayPosition.value = 'left'
+    }
+
+    return { overlayPosition, changePosition, resetPosition }
   },
   {
     persist: true,

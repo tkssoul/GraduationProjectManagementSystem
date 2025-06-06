@@ -10,7 +10,12 @@ export const useJWTStore = defineStore(
       token.value = newToken
     }
 
-    return { token, refreshToken }
+    function clearToken() {
+      token.value = ''
+      localStorage.removeItem('token')
+    }
+
+    return { token, refreshToken, clearToken }
   },
   {
     persist: true,

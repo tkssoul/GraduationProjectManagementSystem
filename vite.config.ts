@@ -7,7 +7,7 @@ import viteCompression from 'vite-plugin-compression'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // base: '/GraduationProjectManagementSystem/', // 设置基础路径，适用于 GitHub Pages
+  // base: '/grade-management/', // 设置基础路径，适用于 GitHub Pages
   server: {
     proxy: {
       '/api': {
@@ -36,7 +36,7 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    outDir: 'docs', // 输出目录，用于GitHub Pages
+    // outDir: 'docs', // 输出目录，用于GitHub Pages
     minify: 'terser',
     terserOptions: {
       compress: {

@@ -36,29 +36,23 @@
         </div>
 
         <!-- 登录或重置密码表单 -->
-        <router-view class="half-width" />
+        <router-view class="half-width" v-slot="{ Component }">
+          <Transition>
+            <component :is="Component" />
+          </Transition>
+        </router-view>
       </a-flex>
     </div>
   </a-flex>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useOverlayStore } from '@/stores/overlayPosition'
 
 const overlayStore = useOverlayStore()
-
-onMounted(() => {
-  if (overlayStore.overlayPosition === 'right') {
-    overlayRef.value?.classList.add('welcome-right')
-  } else {
-    overlayRef.value?.classList.remove('welcome-right')
-  }
-})
-
 const router = useRouter()
-
 const overlayRef = ref<HTMLElement | null>(null)
 const contentVisible = ref(false)
 
@@ -71,17 +65,40 @@ const contentAnimation = () => {
 
 function toReset() {
   overlayStore.changePosition('right')
-  router.replace('/login/reset-validate')
+  setTimeout(() => {
+    router.replace('/login/reset-validate')
+  }, 300)
   overlayRef.value?.classList.add('welcome-right')
   contentAnimation()
 }
 
 function toLogin() {
   overlayStore.changePosition('left')
-  router.replace('/login/input-password')
+  setTimeout(() => {
+    router.replace('/login/input-password')
+  }, 300)
   overlayRef.value?.classList.remove('welcome-right')
   contentAnimation()
 }
+
+onMounted(() => {
+  if (overlayStore.overlayPosition === 'right') {
+    overlayRef.value?.classList.add('welcome-right')
+  } else {
+    overlayRef.value?.classList.remove('welcome-right')
+  }
+})
+
+watch(
+  () => overlayStore.overlayPosition,
+  (newPosition) => {
+    if (newPosition === 'right') {
+      overlayRef.value?.classList.add('welcome-right')
+    } else {
+      overlayRef.value?.classList.remove('welcome-right')
+    }
+  },
+)
 </script>
 
 <style scoped>
@@ -99,13 +116,12 @@ function toLogin() {
 }
 
 .half-width {
-  width: 50%;
-  z-index: 9;
+  width: 300px;
   height: 100%;
 }
 
 .overlay-panel {
-  z-index: 99;
+  z-index: 999;
   height: 100%;
   background: blue;
   padding: 40px;
@@ -131,5 +147,22 @@ function toLogin() {
 .content-visibility {
   animation-name: fadeInOut;
   animation-duration: 0.6s;
+}
+
+.v-enter-active {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.v-leave-active {
+  display: none;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>
