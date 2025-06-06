@@ -133,7 +133,7 @@ function logout() {
                   </a-flex>
                 </template>
                 <span class="user-info">
-                  <a-avatar src="@/assets/logo-icon.png" alt="用户头像" />
+                  <a-avatar src="/src/assets/logo-icon.png" alt="用户头像" />
                   <span class="username">{{ userInfo.name }}</span>
                 </span>
               </a-popover>
