@@ -1,21 +1,3 @@
-好的，我现在需要帮用户写一个高校毕业设计管理系统后端的README.md。首先，我需要根据用户提供的代码上下文和工具调用结果来提取关键信息，确保README的内容准确反映项目的结构和功能。
-
-首先，查看用户提供的代码文件，发现项目使用了Spring Boot框架，MyBatis-Plus作为ORM工具，Redis用于缓存，JWT用于身份验证，MySQL作为数据库。这些都是技术栈的重要部分，需要在README中提到。
-
-接下来，项目的主要功能模块可以从代码中推断。例如，StudentController处理学生的登录、登出和成绩查询；StudentServiceImpl实现了学生登录和成绩获取的业务逻辑；JwtTokenStudentInterceptor用于拦截学生请求，验证JWT令牌；application.yml和application-dev.yml配置了数据库、Redis、MyBatis等参数。这些功能模块需要在README中详细说明。
-
-然后，项目的目录结构可以通过list_dir工具的结果了解。根目录下有.gitignore、pom.xml、README.md（当前为空）、src目录，src下有main（包含java和resources）和test目录。需要在README中列出主要目录及其作用。
-
-另外，配置信息方面，application-dev.yml中配置了本地MySQL和Redis的连接信息，application.yml使用了属性占位符，结合了开发环境配置。这部分需要在部署说明中提到，指导用户如何修改配置以适应自己的环境。
-
-还需要考虑安装和运行步骤。用户可能需要知道如何构建项目（使用Maven）、配置数据库和Redis、启动应用等。根据pom.xml可以推断项目使用Maven管理依赖，所以构建命令是mvn clean install。运行命令则是mvn spring-boot:run。
-
-测试部分，虽然用户没有提供测试代码，但可以建议用户运行mvn test来执行测试用例。
-
-最后，API文档部分，可以提到主要的接口，如学生登录（POST /api/student/login）、登出（POST /api/student/logout）、获取成绩（GET /api/student/grades/published/{id}）等，帮助用户快速了解接口用途。
-
-现在需要将这些信息组织成结构清晰的README.md，包括项目简介、技术栈、目录结构、环境要求、安装与运行、配置说明、API文档、贡献与反馈等部分。确保内容简洁明了，用户能够根据README快速上手项目。
-
 # 高校毕业设计管理系统（后端）
 
 ## 项目简介
