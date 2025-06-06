@@ -3,7 +3,6 @@ import { reactive, computed, onBeforeMount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useIdStore } from '@/stores/username'
 import { useJWTStore } from '@/stores/jwtToken'
-import { useUserStore } from '@/stores/user'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { loginStudent, loginTeacher } from '@/api/user'
 import type { Rule, FormInstance } from 'ant-design-vue/es/form'
@@ -11,14 +10,7 @@ import type { Rule, FormInstance } from 'ant-design-vue/es/form'
 const router = useRouter()
 const usernameStore = useIdStore()
 const jwtStore = useJWTStore()
-const userStore = useUserStore()
 const requestState = ref<string>('idle')
-
-interface UserInfoType {
-  id: number
-  name: string
-  role: string
-}
 
 const formRef = ref<FormInstance>()
 
@@ -76,12 +68,12 @@ async function handleSubmit() {
     if (res.data != null) {
       const token = res.data.token ? res.data.token : res.data.authorization
       jwtStore.refreshToken(token)
-      const userInfo: UserInfoType = {
-        id: res.data.id,
-        name: res.data.name,
-        role: formState.role,
-      }
-      userStore.setUser(userInfo)
+      // const userInfo: UserInfoType = {
+      //   id: res.data.id,
+      //   name: res.data.name,
+      //   role: formState.role,
+      // }
+      // userStore.setUser(userInfo)
       usernameStore.clearUsername()
       router.replace({ name: 'gradeManagement' })
     } else {
