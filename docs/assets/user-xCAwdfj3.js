@@ -1,0 +1,1 @@
+import{i as t}from"./request-Be5djaOi.js";function a(a){return t({url:"/api/reset_password",method:"put",data:a})}function r(a){return t({url:"/api/student/login",method:"post",data:a}).then((t=>t.data))}function e(a){return t({url:"/api/teacher/login",method:"post",data:a}).then((t=>t.data))}export{r as a,e as l,a as r};

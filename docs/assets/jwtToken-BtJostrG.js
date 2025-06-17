@@ -1,0 +1,1 @@
+import{d as e}from"./pinia-DPBO3wPh.js";import{h as o}from"./vendor-CKpYW6Oo.js";const n=e("token",(()=>{const e=o("");return{token:e,refreshToken:function(o){e.value=o},clearToken:function(){e.value="",localStorage.removeItem("token")}}}),{persist:!0});export{n as u};

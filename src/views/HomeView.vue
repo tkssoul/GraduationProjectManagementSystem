@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from 'vue-router'
-import { ref, h, reactive } from 'vue'
+import { ref, h, reactive, onMounted } from 'vue'
 import { useSiderStore } from '@/stores/sider'
 import { useUserStore } from '@/stores/user'
 import { useJWTStore } from '@/stores/jwtToken'
@@ -94,6 +94,10 @@ function logout() {
   jwtStore.clearToken()
   router.replace({ name: 'inputPassword' })
 }
+
+onMounted(() => {
+  router.push({ name: 'gradeManagement' })
+})
 </script>
 
 <template>
@@ -145,6 +149,22 @@ function logout() {
       </a-layout-header>
 
       <!-- 右边内容部分 -->
+      <!-- 全局提示 -->
+      <a-alert
+        message="远程服务器已经下架，所有功能都已不可用"
+        type="error"
+        closable
+        show-icon
+        style="
+          z-index: 9999;
+          position: absolute;
+          width: fit-content;
+          height: min-content;
+          top: 2rem;
+          left: 50%;
+          transform: translateX(-50%);
+        "
+      />
       <router-view v-slot="{ Component }">
         <Transition>
           <component :is="Component" />

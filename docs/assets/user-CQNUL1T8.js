@@ -1,0 +1,1 @@
+import{d as e}from"./pinia-DPBO3wPh.js";import{h as r}from"./vendor-CKpYW6Oo.js";const o=e("user",(()=>{const e=r({name:"",role:"",id:void 0});return{user:e,setUser:function(r){e.value=r},clearUser:function(){e.value={name:"",role:"",id:void 0}}}}),{persist:!0});export{o as u};

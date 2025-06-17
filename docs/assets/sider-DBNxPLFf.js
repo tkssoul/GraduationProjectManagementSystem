@@ -1,0 +1,1 @@
+import{d as e}from"./pinia-DPBO3wPh.js";import{h as s}from"./vendor-CKpYW6Oo.js";const n=e("selectedKey",(()=>{const e=s(["8"]),n=s(["sub1"]);return{selectedKeys:e,openKeys:n,changeKey:function(s){e.value[0]=s},changeOpenKeys:function(e){n.value=e},reset:function(){e.value=["8"]}}}),{persist:!0});export{n as u};

@@ -1,0 +1,1 @@
+import{d as o}from"./pinia-DPBO3wPh.js";import{h as t}from"./vendor-CKpYW6Oo.js";const i=o("overlayPosition",(()=>{const o=t("left");return{overlayPosition:o,changePosition:function(t){o.value=t},resetPosition:function(){o.value="left"}}}),{persist:!0});export{i as u};

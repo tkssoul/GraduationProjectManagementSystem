@@ -1,0 +1,1 @@
+import{d as e}from"./pinia-DPBO3wPh.js";import{h as n}from"./vendor-CKpYW6Oo.js";const o=e("Id",(()=>{const e=n();return{Id:e,setUsername:function(n){e.value=n},clearUsername:function(){e.value=void 0}}}));export{o as u};

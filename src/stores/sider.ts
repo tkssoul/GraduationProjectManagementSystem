@@ -13,7 +13,11 @@ export const useSiderStore = defineStore(
       openKeys.value = newOpenKeys
     }
 
-    return { selectedKeys, openKeys, changeKey, changeOpenKeys }
+    function reset() {
+      selectedKeys.value = ['8']
+    }
+
+    return { selectedKeys, openKeys, changeKey, changeOpenKeys, reset }
   },
   {
     persist: true,
