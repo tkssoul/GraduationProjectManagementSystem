@@ -78,4 +78,14 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+// 全局错误处理
+// 处理动态导入模块失败或CSS预加载失败的情况
+router.onError((error, to) => {
+  const errors = ['Failed to fetch dynamically imported module', 'Unable to preload CSS']
+
+  if (errors.some((e) => error.message.includes(e))) {
+    window.location = to.fullPath as string & Location
+  }
+})
+
 export default router
