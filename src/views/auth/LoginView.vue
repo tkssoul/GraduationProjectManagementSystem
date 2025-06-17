@@ -1,6 +1,13 @@
 <template>
   <a-flex justify="center" align="center" style="height: 100vh; width: 100vw; background: #f5f5f7">
     <div class="login-container">
+      <a-alert
+        message="服务器已下架，所有功能已经失效"
+        closable
+        type="error"
+        style="position: absolute; top: 2rem; left: 50%; transform: translateX(-50%); z-index: 9999"
+      />
+
       <a-flex gap="0" style="height: 100%">
         <!-- overlay面板 -->
         <div class="overlay-panel half-width" ref="overlayRef">
